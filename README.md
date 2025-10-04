@@ -9,3 +9,4 @@ Features:
 - Provides an “Iterate” task to force-add the next prayer sequence for planning future days.
 - Keeps track of completed Fajr tasks in a non-volatile .dat file.
 - Runs as a daemon, periodically checking for completed tasks and updating automatically.
+- Uses Google Tasks API and Aladhan API for prayer timings.
