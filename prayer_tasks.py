@@ -115,6 +115,7 @@ class PrayerTaskManager:
             try:
                 fajr_task = self.service.tasks().get(tasklist=self.tasklist_id, task=fajr_id).execute()
                 if fajr_task.get("status") == "completed":
+                    print(f"[{datetime.datetime.now()}] Fajr checked, adding...")
                     task_ids = self.add_prayer_sequence(today)
                     self.track["fajr_id"] = task_ids["Fajr"]
                     self.track["fajr_date"] = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
@@ -131,6 +132,7 @@ class PrayerTaskManager:
         today = datetime.date.today().isoformat()
         for t in tasks:
             if t["title"] == ITERATE_TASK_TITLE and t.get("status") == "completed":
+                print(f"[{datetime.datetime.now()}] Iterate checked, adding...")
                 task_ids = self.add_prayer_sequence(today)
                 self.track["fajr_id"] = task_ids["Fajr"]
                 self.track["fajr_date"] = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
