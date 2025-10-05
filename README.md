@@ -55,6 +55,7 @@ Getting Started
 
 File Structure
 --------------
+```
 prtk/
 │
 ├─ prayer_tasks.py       # Core logic, object-oriented
@@ -63,6 +64,7 @@ prtk/
 ├─ credentials.json      # Google OAuth credentials (not included in repo)
 ├─ requirements.txt      # Dependencies
 └─ README.md
+```
 
 Security
 --------
