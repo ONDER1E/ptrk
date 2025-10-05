@@ -11,15 +11,7 @@ SCOPES = ["https://www.googleapis.com/auth/tasks"]
 TRACK_FILE = "trk.dat"
 TASKLIST_NAME = "ptrk"
 ITERATE_TASK_TITLE = "Iterate"
-
-PRAYER_SEQUENCE = ["Zuhr", "Asr", "Maghrib", "Isha", "Fajr"]
-API_NAME_MAP = {
-    "Zuhr": "Dhuhr",
-    "Asr": "Asr",
-    "Maghrib": "Maghrib",
-    "Isha": "Isha",
-    "Fajr": "Fajr"
-}
+PRAYER_SEQUENCE = ["Dhuhr", "Asr", "Maghrib", "Isha", "Fajr"]
 
 
 class PrayerTaskManager:
@@ -86,12 +78,11 @@ class PrayerTaskManager:
 
         task_ids = {}
         for prayer in PRAYER_SEQUENCE:
-            api_key = API_NAME_MAP[prayer]
             if prayer == "Fajr":
-                t = timings_tomorrow[api_key]
+                t = timings_tomorrow[prayer]
                 date = datetime.date.fromisoformat(start_date) + datetime.timedelta(days=1)
             else:
-                t = timings_today[api_key]
+                t = timings_today[prayer]
                 date = datetime.date.fromisoformat(start_date)
 
             hour, minute = map(int, t.split(":"))
