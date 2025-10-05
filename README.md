@@ -1,4 +1,5 @@
-# PTRK – Prayer Task Tracker
+This project is licensed for non-commercial use only. See LICENSE for details.
+# PTRK - Prayer Task Tracker
 
 PTRK is a Python-based tool to automatically track Islamic prayer times as Google Tasks.
 It can run as a daemon, automatically adding the next sequence of prayers when the current Fajr task is completed,
