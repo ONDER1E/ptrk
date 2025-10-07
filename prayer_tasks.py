@@ -6,8 +6,12 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+import pytz
 
-SCOPES = ["https://www.googleapis.com/auth/tasks"]
+SCOPES = [
+    "https://www.googleapis.com/auth/tasks",
+    "https://www.googleapis.com/auth/calendar.events"
+]
 TRACK_FILE = "trk.dat"
 TASKLIST_NAME = "ptrk"
 ITERATE_TASK_TITLE = "Iterate"
@@ -20,6 +24,7 @@ class PrayerTaskManager:
         self.country = country
         self.creds = self.google_authenticate()
         self.service = build("tasks", "v1", credentials=self.creds)
+        self.calendar_service = build("calendar", "v3", credentials=self.creds)
         self.tasklist_id = self.get_tasklist_id(TASKLIST_NAME)
         self.track = self.load_track()
     
@@ -77,7 +82,10 @@ class PrayerTaskManager:
         )
 
         task_ids = {}
+        tz = pytz.timezone("Europe/London")  # ⚡ replace with dynamic city timezone if needed
+
         for prayer in PRAYER_SEQUENCE:
+            # Select correct day and time for Fajr vs other prayers
             if prayer == "Fajr":
                 t = timings_tomorrow[prayer]
                 date = datetime.date.fromisoformat(start_date) + datetime.timedelta(days=1)
@@ -86,15 +94,32 @@ class PrayerTaskManager:
                 date = datetime.date.fromisoformat(start_date)
 
             hour, minute = map(int, t.split(":"))
-            due_time = datetime.datetime.combine(date, datetime.time(hour, minute)).isoformat() + "Z"
 
+            # Build a timezone-aware datetime
+            local_dt = tz.localize(datetime.datetime.combine(date, datetime.time(hour, minute)))
+            due_utc = local_dt.astimezone(pytz.UTC)  # convert to UTC for Google Tasks API
+            due_rfc3339 = due_utc.isoformat().replace("+00:00", "Z")
+
+            # Notes include date and time
+            task_notes = f"Date: {local_dt.strftime('%d/%m/%Y')}\nTime: {local_dt.strftime('%I:%M %p')}"
+
+            # Create task in Google Tasks
             task = {
                 "title": f"{prayer} Prayer",
-                "due": due_time,
-                "notes": f"Date: {date}"
+                "due": due_rfc3339,
+                "notes": task_notes
             }
-            created = self.service.tasks().insert(tasklist=self.tasklist_id, body=task).execute()
-            task_ids[prayer] = created["id"]
+            created_task = self.service.tasks().insert(tasklist=self.tasklist_id, body=task).execute()
+            task_ids[prayer] = created_task["id"]
+
+            # Mirror task as a Google Calendar event
+            event = {
+                "summary": f"{prayer} Prayer",
+                "description": task_notes,
+                "start": {"dateTime": local_dt.isoformat(), "timeZone": str(tz)},
+                "end": {"dateTime": (local_dt + datetime.timedelta(minutes=15)).isoformat(), "timeZone": str(tz)}
+            }
+            self.calendar_service.events().insert(calendarId="primary", body=event).execute()
 
         return task_ids
 
