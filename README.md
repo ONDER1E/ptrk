@@ -7,11 +7,11 @@ and provides an “iterate” task to force-add the next day’s prayers.
 
 Features
 --------
-- Auto-adds the next five prayers: Zuhr, Asr, Maghrib, Isha, Fajr (unorthodox order so you can see the next day’s Fajr).
+- Auto-adds the next five prayers after fajr is completed: Zuhr, Asr, Maghrib, Isha, Fajr (unorthodox order so you can see the next day’s Fajr).
 - Provides an “Iterate” task to force-add the next prayer sequence for planning future days.
 - Keeps track of completed Fajr tasks in a non-volatile `.dat` file.
 - Runs as a daemon, periodically checking for completed tasks and updating automatically.
-- Uses Google Tasks API and Aladhan API for prayer timings.
+- Uses Google Tasks API, Google Calendar API and Aladhan API for prayer timings.
 
 Getting Started
 ---------------
@@ -35,19 +35,15 @@ Getting Started
 3. Setup Google API Credentials:
 
    - Go to https://console.cloud.google.com/
-   - Create a project and enable the Google Tasks API.
+   - Create a project and enable the Google Tasks API and Google Calendar API.
    - Create OAuth 2.0 Client ID credentials.
    - Download `credentials.json` and place it in the project folder.
 
-4. First run:
-
-    python prayer_tasks.py
-
-   - Initializes task tracking, creates the next 5 prayer tasks, and sets up the Iterate task if missing.
-
-5. Running the daemon:
+4. Running the daemon:
 
     python prayer_daemon.py
+
+   - On initial execution the program initializes task tracking, creates the next 5 prayer tasks, and sets up the Iterate task if missing.
 
    - Runs continuously and checks for:
      - Completion of the current Fajr task to auto-add the next sequence.
