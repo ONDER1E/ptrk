@@ -3,7 +3,7 @@ import datetime
 from prayer_tasks import PrayerTaskManager, ITERATE_TASK_TITLE
 
 # Poll interval in seconds (safe for free API usage)
-POLL_INTERVAL = 300  # 5 minutes
+POLL_INTERVAL = 10
 
 def run_daemon():
     manager = PrayerTaskManager()
