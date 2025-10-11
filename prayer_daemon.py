@@ -4,7 +4,7 @@ from prayer_tasks import PrayerTaskManager
 import json
 
 # initialise json configuration
-with open("conifg.json", "r") as f:
+with open("config.json", "r") as f:
     json_file = json.load(f)
 
 # Poll interval in seconds (safe for free API usage)

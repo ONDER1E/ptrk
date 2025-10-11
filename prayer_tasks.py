@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 import json
 
 # initialise json configuration
-with open("conifg.json", "r") as f:
+with open("config.json", "r") as f:
     json_file = json.load(f)
 
 # ---------- CONFIGURATION ----------
