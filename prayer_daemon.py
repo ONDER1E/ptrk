@@ -1,9 +1,15 @@
 import time
 import datetime
 from prayer_tasks import PrayerTaskManager
+import json
+
+# initialise json configuration
+with open("conifg.json", "r") as f:
+    json_file = json.load(f)
 
 # Poll interval in seconds (safe for free API usage)
-POLL_INTERVAL = 10
+# POLL_INTERVAL = 10 in config.json
+POLL_INTERVAL = json_file["POLL_INTERVAL"]
 
 def run_daemon():
     manager = PrayerTaskManager()

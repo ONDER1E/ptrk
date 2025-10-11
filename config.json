@@ -1,0 +1,8 @@
+{
+    "POLL_INTERVAL": 10,
+    "PRAYER_SEQUENCE": ["Dhuhr", "Asr", "Maghrib", "Isha", "Fajr"],
+    "TRACK_FILE": "trk.dat",
+    "TASKLIST_NAME": "ptrk",
+    "ITERATE_TASK_TITLE": "Iterate",
+    "z": "this is z"
+  }

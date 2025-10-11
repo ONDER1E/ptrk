@@ -7,16 +7,21 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+import json
+
+# initialise json configuration
+with open("conifg.json", "r") as f:
+    json_file = json.load(f)
 
 # ---------- CONFIGURATION ----------
 SCOPES = [
     "https://www.googleapis.com/auth/tasks",
     "https://www.googleapis.com/auth/calendar.events"
 ]
-TRACK_FILE = "trk.dat"
-TASKLIST_NAME = "ptrk"
-ITERATE_TASK_TITLE = "Iterate"
-PRAYER_SEQUENCE = ["Dhuhr", "Asr", "Maghrib", "Isha", "Fajr"]
+TRACK_FILE = json_file["TRACK_FILE"]
+TASKLIST_NAME = json_file["TASKLIST_NAME"]
+ITERATE_TASK_TITLE = json_file["ITERATE_TASK_TITLE"]
+PRAYER_SEQUENCE = json_file["PRAYER_SEQUENCE"]
 
 
 class PrayerTaskManager:
