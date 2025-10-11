@@ -1,6 +1,6 @@
 import time
 import datetime
-from prayer_tasks import PrayerTaskManager, ITERATE_TASK_TITLE
+from prayer_tasks import PrayerTaskManager
 
 # Poll interval in seconds (safe for free API usage)
 POLL_INTERVAL = 10
