@@ -3,5 +3,27 @@
     "PRAYER_SEQUENCE": ["Dhuhr", "Asr", "Maghrib", "Isha", "Fajr"],
     "TRACK_FILE": "trk.dat",
     "TASKLIST_NAME": "ptrk",
-    "ITERATE_TASK_TITLE": "Iterate"
+    "ITERATE_TASK_TITLE": "Iterate",
+
+    "LOCATION": {
+        "CITY": "Ilford",
+        "COUNTRY": "UK",
+        "TIMEZONE": "Europe/London"
+      },
+    
+      "CALCULATION": {
+        "METHOD": 99,
+        "SCHOOL": 0,
+        "LAT_ADJUST_METHOD": 3,
+        "FAJR_ANGLE": 18,
+        "ISHA_ANGLE": 17
+      },
+    
+      "OFFSETS_MINUTES": {
+        "Fajr": 2,
+        "Dhuhr": 3,
+        "Asr": 2,
+        "Maghrib": 0,
+        "Isha": 2
+      }
 }

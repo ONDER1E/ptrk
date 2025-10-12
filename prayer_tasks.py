@@ -73,12 +73,44 @@ class PrayerTaskManager:
 
     # ---------- PRAYER API ----------
     def get_prayer_times(self, date=None):
+        # Fetch prayer times using customizable parameters from config.json.
         if not date:
             date = datetime.date.today().isoformat()
-        url = f"http://api.aladhan.com/v1/timingsByCity/{date}?city={self.city}&country={self.country}&method=2"
+
+        calc = json_file["CALCULATION"]
+        loc = json_file["LOCATION"]
+        offsets = json_file["OFFSETS_MINUTES"]
+
+        url = (
+            f"http://api.aladhan.com/v1/timingsByCity/{date}"
+            f"?city={loc['CITY']}&country={loc['COUNTRY']}"
+            f"&method={calc['METHOD']}"
+            f"&latitudeAdjustmentMethod={calc['LAT_ADJUST_METHOD']}"
+            f"&school={calc['SCHOOL']}"
+            f"&angleFajr={calc['FAJR_ANGLE']}"
+            f"&angleIsha={calc['ISHA_ANGLE']}"
+        )
+
         response = requests.get(url)
         response.raise_for_status()
-        return response.json()["data"]["timings"]
+        data = response.json()["data"]["timings"]
+
+        adjusted = {}
+        for prayer, base_time in data.items():
+            if prayer not in offsets:
+                continue
+
+            try:
+                hour, minute = map(int, base_time.split(":"))
+                minute += offsets[prayer]
+                if minute >= 60:
+                    hour += 1
+                    minute -= 60
+                adjusted[prayer] = f"{hour:02d}:{minute:02d}"
+            except Exception as e:
+                print(f"[Warning] Could not parse {prayer} time: {base_time} ({e})")
+
+        return adjusted
 
     # ---------- CORE LOGIC ----------
     def add_prayer_sequence(self, start_date):
@@ -87,7 +119,7 @@ class PrayerTaskManager:
             date=(datetime.date.fromisoformat(start_date) + datetime.timedelta(days=1)).isoformat()
         )
 
-        tz = pytz.timezone("Europe/London")  # replace dynamically if needed
+        tz = pytz.timezone(json_file["LOCATION"]["TIMEZONE"])
         task_ids = {}
 
         for prayer in PRAYER_SEQUENCE:
